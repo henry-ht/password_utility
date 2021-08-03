@@ -1,8 +1,116 @@
-<section class="row">
-  <aside class="col-md-4">
-
+<section class="row justify-content-center pt-5 pb-5">
+  <aside class="col-md-5 mb-5">
+    <div class="input-group flex-nowrap">
+      <input type="search" class="form-control" [(ngModel)]="textSearch" placeholder="Name" >
+        <button type="button" (click)="formCreateReset()" class="input-group-text ml-1 bg-transparent">
+          <fa-icon [icon]="faPlus"></fa-icon>
+        </button>
+    </div>
+    <div class="py-3 px-2 mb-3 text-right">
+      <span class="text-muted small">
+        Sort by date:
+      </span>
+      <div class="btn-group float-right">
+        <button type="button" (click)="changeOrderCreate_at(false)" [ngClass]="{'text-info shadow-sm': !orderCreate_at}" class="btn-small btn-light border-0">
+          ASC
+        </button>
+        <button type="button" (click)="changeOrderCreate_at(true)" [ngClass]="{'text-info shadow-sm': orderCreate_at}" class="ml-2 btn-small btn-light border-0">
+          DESC
+        </button>
+      </div>
+    </div>
+    <div class="h-max-app">
+      <ul class="list-group list-group-flush" >
+        <li class="list-group-item" *ngFor="let account of accountList | name: textSearch | orderBy:'created_at':orderCreate_at; let i = index">
+          <div class="card w-100 border-0">
+            <div class="row g-0">
+              <div class="col-md-3 p-0">
+                <div class="card-capitalize w-100 rounded text-center text-uppercase shadow-sm" *ngIf="!account.logo_url">
+                  {{account.account_name.charAt(0)}}
+                </div>
+                <img *ngIf="account.logo_url" [src]="account.logo_url" class="img-fluid rounded-start shadow-sm" alt="{{account.account_name}}" >
+              </div>
+              <div class="col-md-9 p-0">
+                <div class="card-body pt-0">
+                  <h5 class="card-title mb-1 text-uppercase">{{(account.account_name | slice:0:30)+(account.account_name.length >= 30 ? '...':'')}}</h5>
+                  <p class="card-text mb-0">{{account.username}}</p>
+                  <p class="card-text mb-0"> <a href="{{account.site_url}}" class="btn-link" target="_blank" >{{(account.site_url | slice:0:30)+(account.site_url.length >= 30 ? '...':'')}}</a> </p>
+                  <p class="card-text mb-0 small"><small class="text-muted">{{account.created_at | date}}</small></p>
+                  <div class="btn-group float-right">
+                    <button type="button" (click)="addFormCreateEdit(account)" class="btn-small btn-light border-0">
+                      <fa-icon [icon]="faEdit"></fa-icon>
+                    </button>
+                    <button type="button" (click)="accountDelete(account)" class="btn-small btn-light border-0">
+                      <fa-icon [icon]="faTrash"></fa-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
   </aside>
-  <article class="col-md-8">
+  <article class="col-md-5 pl-md-5">
+    <form novalidate class="pl-md-5" (ngSubmit)="createAccount()" [formGroup]="formCreate" autocomplete="off" >
+      <h3>
+        Save and Edit Acount
+      </h3>
+      <div class="mb-3">
+        <label for="account_name" class="form-label">Account Name <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" #account_name name="account_name" id="account_name" [ngClass]="{'is-invalid': isValid().account_name.errors && isValid().account_name.dirty}" formControlName="account_name" >
+        <div  class="text-danger" *ngIf="isValid().account_name.errors && isValid().account_name.dirty" >
+          Debe tener mas de 3 Caracteres
+        </div>
+      </div>
 
+      <div class="mb-3">
+        <label for="username" class="form-label">UserName <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" name="username" id="username" [ngClass]="{'is-invalid': isValid().username.errors && isValid().username.dirty}" formControlName="username" >
+        <div  class="text-danger form-text" *ngIf="isValid().username.errors && isValid().username.dirty" >
+          Debe tener mas de 3 Caracteres
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
+        <div class="input-group flex-nowrap">
+          <input type="password" class="form-control" #password name="password" id="password" [ngClass]="{'is-invalid': isValid().password.errors && isValid().password.dirty}" formControlName="password" >
+          <button type="button" (click)="setPassword()" class="input-group-text ml-1 bg-transparent">
+            <fa-icon [icon]="faCog"></fa-icon>
+          </button>
+          <button type="button" (click)="seePassword()" class="input-group-text ml-1 bg-transparent">
+            <fa-icon [icon]="faEye"></fa-icon>
+          </button>
+        </div>
+        <div  class="text-danger form-text" *ngIf="isValid().password.errors && isValid().password.dirty" >
+          Minimo 6 Caracteres
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="site_url" class="form-label">Site url <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" name="site_url" id="site_url" [ngClass]="{'is-invalid': isValid().site_url.errors && isValid().site_url.dirty}" formControlName="site_url" >
+        <div  class="text-danger form-text" *ngIf="isValid().site_url.errors && isValid().site_url.dirty" >
+          Url no valida
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="logo_url" class="form-label">Logo url</label>
+        <input type="text" class="form-control" name="logo_url" id="logo_url" [ngClass]="{'is-invalid': isValid().logo_url.errors && isValid().logo_url.dirty}" formControlName="logo_url" >
+        <div  class="text-danger form-text" *ngIf="isValid().logo_url.errors && isValid().logo_url.dirty" >
+          Url no valida
+        </div>
+      </div>
+
+      <div class="w-100 text-right" *ngIf="!formCreate.value.id">
+        <button class="btn btn-primary" type="submit" [disabled]="formCreate.invalid">Save</button>
+      </div>
+      <div class="w-100 text-right" *ngIf="formCreate.value.id">
+        <button class="btn btn-success" type="submit" [disabled]="formCreate.invalid">Edit</button>
+      </div>
+    </form>
   </article>
 </section>
