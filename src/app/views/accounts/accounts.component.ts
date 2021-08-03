@@ -88,7 +88,7 @@ export class AccountsComponent implements OnInit {
     this.accountNameInput.nativeElement.focus();
   }
 
-  setAvart(){
+  setAvatar(){
     this.formCreate.controls['logo_url'].setValue('https://thispersondoesnotexist.com/image');
   }
 
