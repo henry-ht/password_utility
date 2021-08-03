@@ -99,7 +99,12 @@
 
       <div class="mb-3">
         <label for="logo_url" class="form-label">Logo url</label>
-        <input type="text" class="form-control" name="logo_url" id="logo_url" [ngClass]="{'is-invalid': isValid().logo_url.errors && isValid().logo_url.dirty}" formControlName="logo_url" >
+        <div class="input-group flex-nowrap">
+          <input type="text" class="form-control" name="logo_url" id="logo_url" [ngClass]="{'is-invalid': isValid().logo_url.errors && isValid().logo_url.dirty}" formControlName="logo_url" >
+          <button type="button" (click)="setAvart()" class="input-group-text ml-1 bg-transparent">
+            <fa-icon [icon]="faUser"></fa-icon>
+          </button>
+        </div>
         <div  class="text-danger form-text" *ngIf="isValid().logo_url.errors && isValid().logo_url.dirty" >
           Url no valida
         </div>

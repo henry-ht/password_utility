@@ -2,7 +2,7 @@ import { HttpService } from './../../services/http.service';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from "@angular/forms";
 import * as Dayjs from 'dayjs';
-import { faCog, faEdit, faEye, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faEdit, faEye, faPlus, faTrash, faUser } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -16,6 +16,7 @@ export class AccountsComponent implements OnInit {
   faPlus = faPlus;
   faCog = faCog;
   faEye = faEye;
+  faUser = faUser;
   formCreate:FormGroup;
   accountList:any = [];
   readonly regUrl:string = '(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})[/\\w .-]*/?';
@@ -85,6 +86,10 @@ export class AccountsComponent implements OnInit {
 
     console.log('reset: ', this.formCreate.value)
     this.accountNameInput.nativeElement.focus();
+  }
+
+  setAvart(){
+    this.formCreate.controls['logo_url'].setValue('https://thispersondoesnotexist.com/image');
   }
 
   seePassword(){
